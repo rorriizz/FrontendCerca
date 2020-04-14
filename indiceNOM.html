@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SIMOCA</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/menu.css">
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://kit.fontawesome.com/f9cb536a7e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="toptitle">
+  <h1>Sistema de Monitoreo de la Calidad del Aire</h1>
+  <p>La Paz, B.C.S</p> 
+</div>
+
+<nav class="navbar navbar-expand-sm bg-info navbar-dark">
+  <a class="navbar-brand" href="#"><img src="img/cercab.png" height="40" width="90" alt=""></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="../FrontendCerca/index.html"><i class="fas fa-map-marked-alt"></i> Regresar</a>
+          </li>
+          <li class="nav-item">
+        <a class="nav-link" href="#acerca"><i class="fas fa-info-circle"></i> Acerca de</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#contacto"><i class="far fa-address-card"></i> Contacto</a>
+      </li>
+    
+          
+    </ul>
+  </div>  
+</nav>
+
+    
+<div id="indice" class="jumbotron indice">
+    <p id>Índice</p>
+  </style>
+  <table class="tg">
+    <tr>
+      <th class="tg-mqa1" colspan="3">Índices de calidad del aire para PMT</th>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Calidad del aire</td>
+      <td class="tg-73oq">Intervalo de PM10 promedio móvil<br>ponderado de 12 horas (µg/m3)</td>
+      <td class="tg-73oq">Intervalo de PM2.5 promedio móvil <br>ponderado de 12 horas (µg/m3)</td>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Buena</td>
+      <td class="tg-73oq">50</td>
+      <td class="tg-73oq">25</td>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Aceptable</td>
+      <td class="tg-73oq">&gt;50 y 75</td>
+      <td class="tg-73oq">&gt;25 y 45</td>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Mala</td>
+      <td class="tg-73oq">&gt;75 y 155</td>
+      <td class="tg-73oq">&gt;45 y 79</td>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Muy Mala</td>
+      <td class="tg-73oq">&gt;155 y 235</td>
+      <td class="tg-73oq">&gt;79 y 147</td>
+    </tr>
+    <tr>
+      <td class="tg-73oq">Extremadamente Mala</td>
+      <td class="tg-73oq">&gt;235</td>
+      <td class="tg-73oq">&gt;147</td>
+    </tr>
+  </table>
+  <br>
+  <table class="tg">
+    <tr>
+      <th class="tg-baqh" colspan="3">Tabla 2. Índices de calidad del aire para O3</th>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Calidad del aire</td>
+      <td class="tg-0lax">Intervalo de ozono (O3)<br>promedio de una hora(ppm)</td>
+      <td class="tg-0lax">Intervalo de ozono (O3)promedio <br>móvil de ocho horas(ppm)</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Buena</td>
+      <td class="tg-0lax">51</td>
+      <td class="tg-0lax">51</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Aceptable</td>
+      <td class="tg-0lax">&gt;0.051 y 0.095</td>
+      <td class="tg-0lax">&gt;0.051 y 0.070</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Mala</td>
+      <td class="tg-0lax">&gt;0.095 y 0.135</td>
+      <td class="tg-0lax">&gt;0.070 y 0.092</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Muy Mala</td>
+      <td class="tg-0lax">&gt;0.135 y 0.175</td>
+      <td class="tg-0lax">&gt;0.092 y 0.114</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Extremadamente Mala</td>
+      <td class="tg-0lax">&gt; 0.175</td>
+      <td class="tg-0lax">&gt; 0.114</td>
+    </tr>
+  </table>
+  <br>
+  <table class="tg">
+    <tr>
+      <th class="tg-baqh" colspan="4">Tabla 3. Índices de calidad del aire para NO2, SO2 y CO</th>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Calidad del aire</td>
+      <td class="tg-0lax">Intervalo de dióxido <br>de nitrógeno (NO2)<br>promedio de una hora(ppm)</td>
+      <td class="tg-0lax">Intervalo de dióxido de azufre (SO2) <br>promedio móvil de 24 horas <br>(como aproximación al <br>promedio de 24 horas)(ppm)</td>
+      <td class="tg-0lax">Intervalo de monóxido <br>de carbono (CO) <br>promedio móvil <br>de ocho horas(ppm)</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Buena</td>
+      <td class="tg-0lax">107</td>
+      <td class="tg-0lax">8</td>
+      <td class="tg-0lax">8.75</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Aceptable</td>
+      <td class="tg-0lax">&gt;0.107 y 0.210</td>
+      <td class="tg-0lax">&gt;0.008 y 0.110</td>
+      <td class="tg-0lax">&gt;8.75 y 11.00</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Mala</td>
+      <td class="tg-0lax">&gt;0.210 y 0.230</td>
+      <td class="tg-0lax">&gt;0.110 y 0.165</td>
+      <td class="tg-0lax">&gt;11.00 y 13.30</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Muy Mala</td>
+      <td class="tg-0lax">&gt;0.230 y 0.250</td>
+      <td class="tg-0lax">&gt;0.165 y 0.220</td>
+      <td class="tg-0lax">&gt;13.30 y 15.50</td>
+    </tr>
+    <tr>
+      <td class="tg-0lax">Extremadamente Mala</td>
+      <td class="tg-0lax">&gt;0.250</td>
+      <td class="tg-0lax">&gt;0.220</td>
+      <td class="tg-0lax">&gt;15.50</td>
+    </tr>
+  </table>
+  
+  
+  </div>
+
+
+<div id="acerca" class="jumbotron about">
+  <p>Quienes somos</p>
+  <p>Organización de la sociedad civil que surgió a partir de un grupo ciudadano diverso, 
+    incluyente, apartidista y empoderado por su propia membresía. Nuestro interés principal 
+    es buscar y promover soluciones que mejoren la calidad de vida de los sudcalifornianos, 
+    enfocándonos principalmente en impulsar una transición hacia el uso de energías más limpias 
+    y renovables y en el mejoramiento de la calidad del ambiente de nuestras ciudades y comunidades</p>
+</div>
+
+
+<div id="contacto" class="jumbotron footer">
+  <p>Contacto</p>
+  <div class="row">
+    <div class="col"> <a href="www.facebook.com/CERCALAPAZ/"><i class="fab fa-facebook-square"></i> Facebook</a></div>
+    <div class="col"> <a href="url"><i class="fab fa-twitter"></i> Twitter</a></div>
+    <div class="col"> <a href="http://www.cerca.org.mx"><i class="fas fa-globe"></i> web</a></div>
+  </div>
+  <div class="row">
+    <div class="col"><a href="tel:+526121288497"><i class="fas fa-phone-square-alt"></i> Teléfono</div>
+    <div class="col"><a href="mailto:info@cerca.org.mx"><i class="fas fa-envelope-square"></i> correo </a></div>
+    <div class="col"><a href="https://www.google.com/maps/place/CENTRO+DE+ENERGIA+RENOVABLE+Y+CALIDAD+AMBIENTAL/@24.1487074,-110.3275794,17z/data=!3m1!4b1!4m5!3m4!1s0x86afd34c2c3e28b5:0x3ee2467a5969bad0!8m2!3d24.1487074!4d-110.3253907"><i class="fas fa-map-marker-alt"></i> Dirección</a></div>
+  </div>
+</div>
+
+
+<script>
+  var toggler = document.getElementsByClassName("caret");
+  var i;
+  
+  for (i = 0; i < toggler.length; i++) {
+    toggler[i].addEventListener("click", function() {
+      this.parentElement.querySelector(".nested").classList.toggle("active");
+      this.classList.toggle("caret-down");
+    });
+  }
+</script>
+
+</body>
+</html>
