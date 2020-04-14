@@ -1,0 +1,613 @@
+<HTML>
+    <head>
+    <meta charset="utf-8"></meta>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        .sidebar{
+            position: absolute;
+            width:33.3333%;
+            top: 0;
+            bottom: 0;
+            border-right: 2px solid rgba(0, 0, 0, 0.25);
+            
+        }
+        .map{
+            position: absolute;
+            width:66.6666%;
+            left:33.3333%;
+            top: 0;
+            bottom: 0;
+            }
+        body {
+            color: #404040;
+            font: condensed 150% monospace;
+            
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            font-size: 1vw;
+            
+        }
+        *{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        a {
+            color: #404040;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #101010;
+        }
+        .pad2 {
+            padding: 5px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .listings {
+            height: 100%;
+            overflow: auto;
+            padding-bottom: 60px;
+        }
+        .listings .item {
+            display: block;
+            border-bottom: 1px solid #eee;
+            padding: 7%;
+            text-decoration: none;
+        }
+        .listings .item:last-child { border-bottom: none; }
+        .listings .item .title {
+            display: block;
+            color: #2FA202;
+            font-weight: 600;
+            font-size: 1.2vw;
+            padding-bottom: 2%;
+            text-transform: uppercase;
+        }
+        .listings .item .title small { font-weight: 400; }
+        .listings .item.active .title,
+        .listings .item .title:hover { color:black; }
+        .listings .item.active {
+            background-color: #f8f8f8;
+        }
+        ::-webkit-scrollbar {
+            width: 3px;
+            height: 3px;
+            border-left: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-track {
+            background: none;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38b208;
+            border-radius: 0;
+        }
+        .clearfix { display: block; }
+        .clearfix::after {
+            content: '.';
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        .mapboxgl-popup-content h3 {
+            background: #38b208;
+            color: #fff;
+            margin: 0;
+            display: block;
+            text-align: center;
+            /*border-radius: 3px 3px 3px 3px;*/
+            font-weight: 700;
+        }
+        .mapboxgl-popup-content {
+            margin: 20,20,20,20;
+            font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+            padding: 0;
+            width: 300px;
+        }
+        .mapboxgl-popup-content-wrapper {
+            padding: 1%;
+        }
+        .mapboxgl-popup-content h4 {
+        margin: 0;
+        display: block;
+        text-align: center;
+        font-weight: bold;
+        }
+        .mapboxgl-popup-content h5 {
+        margin: 0;
+        padding-left: 2%;
+        font-weight: bold;
+        display: inline;
+        }
+        .mapboxgl-popup-content p {
+            text-align: center;
+            display: inline;
+            font-weight: 200 10px/15px;
+        }
+    /**
+    DATOS DEBAJO DE RECOMENDACIONES AZUL - #51bbd6, oscuro: #2792AE
+    DATOS REBASAN OMS AMARILLO- #E4E76C, oscuro: 
+    DATOS REBASAN NOM  INDIANRED - #CD5C5C, oscuro:
+    DESCONEXI�N MAYOR A UN D�A (SIN DATOS) GRIS - #7D8389, oscuro:
+    **/
+    </style>
+    <title>Monitoreo La Paz, B.C.S.</title>
+    </head>
+    <body>
+        <div class="sidebar pad2">
+            <div class='cabecera'>
+                <h1 style="text-align: center; font-size: 3vw;">Estaciones</h1>
+                <span id='txtEstacion'></span>
+                <p id="demo"></p>
+            </div>
+            <div id='listings' class='listings'></div>
+        </div>
+        <div id='map' class="map pad2" ></div>
+        <script>
+        var stores = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {
+                "name": "Preparatoria Morelos",
+                "sistema":"Sparrow - Ambience Data",
+                "fecha":"-",
+                "CO":0,
+                "NO2":0,
+                "O3":0,
+                "SO2":0,
+                "PM10":0,
+                "PM25":0,
+                "QA":0
+            },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    -110.31258344650269,
+                    24.13914648384924
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                "name": "Primaria 3 de mayo",
+                "sistema": "Sparrow - Ambience Data",
+                "fecha":"-",
+                "CO":0,
+                "NO2":0,
+                "O3":0,
+                "SO2":0,
+                "PM10":0,
+                "PM25":0,
+                "QA":0
+                
+            },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    -110.29127597808838,
+                    24.17271422283604
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                "name":"Preparatoria CETMAR 04",
+                "sistema":"Sparrow - Ambience Data",
+                "fecha":"-",
+                "CO":0,
+                "NO2":0,
+                "O3":0,
+                "SO2":0,
+                "PM10":0,
+                "PM25":0,
+                "QA":0
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    -110.34492015838623,
+                    24.143307443557518
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                "name":"Primaria Gustavo Diaz Ordaz",
+                "sistema":"Sparrow - Ambience Data",
+                "fecha":"-",
+                "CO":0,
+                "NO2":0,
+                "O3":0,
+                "SO2":0,
+                "PM10":0,
+                "PM25":0,
+                "QA":0
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    -110.26368141174316,
+                    24.152235916383788
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                "name":"ECOPAZ",
+                "sistema":"Sistema propio (CERCA)",
+                "fecha":"-",
+                "CO":0,
+                "NO2":0,
+                "O3":0,
+                "SO2":0,
+                "PM10":0,
+                "PM25":0,
+                "QA":0
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                    -110.26544094085693,
+                    24.197573525684145
+                    ]
+                }
+            }
+            ]
+        }
+        
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2VyY2FsYXBheiIsImEiOiJjazR4M2NicnUwMmZpM3JwMTJnOTdkcWQyIn0.o4qAYLKqQCqUBYHemRQjyg';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            //light-v10, dark-v10 ,outdoors-v11, satellite-v9
+            style: 'mapbox://styles/mapbox/outdoors-v11',
+            center: [-110.315422,24.136152],
+            zoom: 11
+        });
+        map.on('load', function(e) {
+        // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+        map.addSource('stores', {
+        type: 'geojson',
+        data: stores,
+        cluster: false,
+        clusterMaxZoom: 100, // Max zoom to cluster points on
+        clusterRadius: 80 // Radius of each cluster when clustering points (defaults to 50)
+        });
+        
+        map.addLayer({
+        id: 'clusters',
+        type: 'circle',
+        source: 'stores',
+        filter: ['has', 'point_count'],
+        paint: {
+        // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+        // with three steps to implement three types of circles:
+        //   * Blue, 20px circles when point count is less than 100
+        //   * Yellow, 30px circles when point count is between 100 and 750
+        //   * Pink, 40px circles when point count is greater than or equal to 750
+        'circle-color': [
+        'step', ['get', 'point_count'],
+        '#f28cb1', 100,'#38b208', 750, '#51bbd6'],
+        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40]}
+        });
+        map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'stores',
+        filter: ['has', 'point_count'],
+        layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12 }
+        });
+        map.addLayer({
+        id: 'unclustered-point',
+        type: 'circle',
+        source: 'stores',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+        'circle-color': '#38b208',
+        'circle-radius': 10,
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#fff'
+        }
+        });
+    
+        map.addLayer({
+        id: 'unclustered-text',
+        type: 'symbol',
+        source: 'stores',
+        filter: ['!', ['has', 'point_count']],
+        layout: {
+            'text-field': ['get', 'name'],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+            'text-variable-anchor': ['top'],
+            'text-radial-offset': 1,
+        }
+        });
+        var auxQA = "";
+        //LAYER PARA MODIFICAR COLORES CLUSTERS CON BASE EN LA NORMA, 0-4 = Bueno-Extremadamente malo
+        map.addLayer(
+            {
+            id: 'unclustered-indice',
+            type: 'circle',
+            source: 'stores',
+            layout: {
+                'visibility': 'none'
+            },
+            // filter: ['!', ['has', 'point_count']],
+            paint: {
+            'circle-color': [
+                'step',
+                ['get', 'QA'],
+                '#38B208',
+                1,
+                '#EDB02D',
+                2,
+                '#FC7928',
+                3,
+                '#F93131',
+                4,
+                '#A8549D'
+            ],
+            'circle-radius': 10,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#fff'
+            }
+        });
+    
+        // const PM10 = ['==', ['get', 'PM10'], '-'];
+        // map.addLayer({
+        // 'id': 'PM_individual',
+        // 'type': 'circle',
+        // 'source': 'stores',
+        // 'filter': [
+        //     'all',
+        //     PM10,
+        //     ['!=', ['get', 'cluster'], true]
+        // ],
+        // 'paint': {
+        // 'circle-color': '#8dd3c7',
+        // 'circle-radius': 5
+        // }
+        // });
+            // inspect a cluster on click
+        map.on('click', 'clusters', function(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+        layers: ['clusters']
+        });
+        var clusterId = features[0].properties.cluster_id;
+        map.getSource('stores').getClusterExpansionZoom( clusterId,
+        function(err, zoom) {
+        if (err) return;
+        map.easeTo({
+        center: features[0].geometry.coordinates,
+        zoom: zoom });
+        }); 
+        });
+        map.on('click', function(e) {
+        /* Determine if a feature in the "locations" layer exists at that point. */ 
+        var features = map.queryRenderedFeatures(e.point, {
+            layers: ['unclustered-point']
+        });
+        
+        /* If yes, then: */
+        if (features.length) {
+            var clickedPoint1 = features[0];
+            //Actualizar datos en de store en JSON
+    
+            var clickedPoint = features[0];
+    
+            /* Fly to the point */
+            flyToStore(clickedPoint);
+            
+            /* Close all other popups and display popup for clicked store */
+            createPopUp(clickedPoint);
+            
+            /* Highlight listing in sidebar (and remove highlight for all other listings) */
+            var activeItem = document.getElementsByClassName('active');
+            if (activeItem[0]) {
+            activeItem[0].classList.remove('active');
+            }
+            var listing = document.getElementById('listing-' + clickedPoint.properties.id);
+        }
+        });
+        map.on('mouseenter', 'clusters', function() {
+        map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'clusters', function() {
+        map.getCanvas().style.cursor = ''; });
+        
+        //document.getElementById("demo").innerHTML = 5 + 6;
+        stores.features.forEach(function(store, i){
+        store.properties.id = i;
+        });
+        buildLocationList(stores);
+        });
+        //Usados para este c�digo:  
+        //https://docs.mapbox.com/help/tutorials/building-a-store-locator/
+        function buildLocationList(data) {
+        data.features.forEach(function(store, i){
+        /**
+         * Create a shortcut for `store.properties`,
+         * which will be used several times below.
+        **/
+        var prop = store.properties;
+        /* Add a new listing section to the sidebar. */
+        var listings = document.getElementById('listings');
+        var listing = listings.appendChild(document.createElement('div'));
+        /* Assign a unique `id` to the listing. */
+        listing.id = "listing-" + prop.id;
+        /* Assign the `item` class to each listing for styling. */
+        listing.className = 'item';
+        /* Add the link to the individual listing created above. */
+        var link = listing.appendChild(document.createElement('a'));
+        link.href = '#';
+        link.className = 'title';
+        link.id = "link-" + prop.id;
+        link.innerHTML = prop.name;
+        link.dataPosition = i;
+        /* Add details to the individual listing. */
+        var details = listing.appendChild(document.createElement('div'));
+        details.innerHTML = prop.sistema; 
+        /** 
+             * Listen to the element and when it is clicked, do four things:
+             * 1. Update the `currentFeature` to the store associated with the clicked link
+             * 2. Fly to the point
+             * 3. Close all other popups and display popup for clicked store
+             * 4. Highlight listing in sidebar (and remove highlight for all other listings)
+        **/
+        link.addEventListener('click', function(e){
+            var clickedListing1 = data.features[this.dataPosition];
+            var clickedListing = data.features[this.dataPosition];
+            setTimeout(() => {  createPopUp(clickedListing); }, 1000);
+            flyToStore(clickedListing);
+            
+            
+            //documen t.getElementById("demo").innerHTML = 5 + 14; //PRUEBA 
+            var activeItem = document.getElementsByClassName('active');
+            if (activeItem[0]) {
+                activeItem[0].classList.remove('active');
+            }
+            this.parentNode.classList.add('active');
+        });
+      });
+      refresh();
+    }
+    
+    function flyToStore(currentFeature) {  
+      map.flyTo({
+        center: currentFeature.geometry.coordinates, zoom:12
+      });
+    }
+    
+    function createPopUp(currentFeature) {
+      var popUps = document.getElementsByClassName('mapboxgl-popup');
+      /** Check if there is already a popup on the map and if so, remove it */
+     
+      if (popUps[0]) popUps[0].remove();
+    //SE AGREGAN VALORES DE POPUP PARA ESTACION ACTIVA
+      var popup = new mapboxgl.Popup({ closeOnClick: false })
+        .setLngLat(currentFeature.geometry.coordinates)
+        .setHTML('<h3>'+ currentFeature.properties.name  +'</h3>' +
+          '<h4> Datos de monitoreo:</h4>' + '<h5> FECHA: </h5><p>'+ currentFeature.properties.fecha + '</p><br>'+ 
+          '<h5> Monoxido Carbono:  </h5><p>'+ currentFeature.properties.CO + '</p><br>' + '<h5> Dioxido de Nitrogeno: </h5><p>'+ currentFeature.properties.NO2 + '</p><br>' +
+          '<h5> Ozono:  </h5><p>'+ currentFeature.properties.O3 + '</p><br>' + '<h5> Dioxido de Azufre:  </h5><p>'+ currentFeature.properties.SO2 + '</p><br>'+
+          '<h5> Material Particulado 10:  </h5><p>'+ currentFeature.properties.PM10 + '</p><br>' + '<h5> Material Particulado 2.5:  </h5><p>'+ currentFeature.properties.PM25 + '</p><br>')
+        .addTo(map);
+    }
+    /* This will let you use the .remove() function later on */
+    if (!('remove' in Element.prototype)) {
+      Element.prototype.remove = function() {
+        if (this.parentNode) {
+          this.parentNode.removeChild(this);
+        }
+      };
+    }
+    
+    var xmlHttp;
+    function refresh() {
+        let xmlHttp = GetXmlHttpObject();
+        if (xmlHttp==null)
+        {
+            alert ("Browser does not support HTTP Request");
+            return;
+        }else{
+            var i = 0;
+            /*while (i < stores.features.length){
+                console.log(i)
+                console.log(stores.features[i].properties.name)
+                xmlHttp.open("GET", "http://cerca.org.mx/prueba_cerca.php?q=" + stores.features[i].properties.name, true);
+                console.log(xmlHttp);
+                i++;
+            }*/
+            (function loop(i, length) {
+                if (i>= length) {
+                    return;
+                }
+                xmlHttp.open("GET", "http://cerca.org.mx/prueba_cerca.php?q=" + stores.features[i].properties.name, true);
+    
+                xmlHttp.responseType ="document";
+                //console.log(stores.features[i].properties.name);
+                //alert("Entro!" + str);
+                xmlHttp.onreadystatechange = function() {
+                    //readystate 4 significa completado, status 200 significa existo (Esto para peticiones XMLHTTPResponse)
+                    if (this.readyState == 4 && this.status == 200) {
+                        xmlDoc = xmlHttp.responseXML;
+                        //console.log(xmlDoc);
+                        stores.features[i].properties.fecha = xmlDoc.getElementsByTagName("fecha")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.CO = xmlDoc.getElementsByTagName("CO")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.NO2 = xmlDoc.getElementsByTagName("NO2")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.O3 = xmlDoc.getElementsByTagName("O3")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.SO2 = xmlDoc.getElementsByTagName("SO2")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.PM10 = xmlDoc.getElementsByTagName("PM10")[0].childNodes[0].nodeValue;
+                        stores.features[i].properties.PM25 = xmlDoc.getElementsByTagName("PM25")[0].childNodes[0].nodeValue;
+                        //stores.features[i].properties.QA = xmlDoc.getElementsByTagName("QA")[0].childNodes[0].nodeValue;
+                        loop(i + 1, length);
+                    }
+                
+                    
+                }
+                xmlHttp.send(null);
+                sleep(1000);
+                
+            })(0, stores.features.length);
+        }
+    }
+    
+    
+    function sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+      } while (currentDate - date < milliseconds);
+    }
+    
+    var timer = window.setInterval(function() {
+    
+            map.getSource('stores').setData(stores);
+            //console.log(stores);
+            // map.setLayoutProperty(
+            //     'unclustered-indice',
+            //     'visibility');
+            
+            // map.setLayoutProperty(
+            //     'unclustered-mala',
+            //     'visibility');
+            // map.setLayoutProperty(
+            //     'unclustered-aceptable',
+            //     'visibility');
+            // map.setLayoutProperty(
+            //     'unclustered-buena',
+            //     'visibility');
+    
+        }, 10000);
+    
+    function GetXmlHttpObject()
+     { 
+     var objXMLHttp=null;
+     if (window.XMLHttpRequest)
+      {
+      objXMLHttp=new XMLHttpRequest();
+      }
+     else if (window.ActiveXObject)
+      {
+      objXMLHttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+     return objXMLHttp;
+     }
+    </script>
+    </body>
+    </HTML>
