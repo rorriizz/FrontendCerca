@@ -9,8 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="css/menu.css">
-  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
   <script src="https://kit.fontawesome.com/f9cb536a7e.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -47,9 +47,11 @@
 <div class="container" style="margin-top:30px">
   <div class="row">
     <div class="col-sm-9">
-      <div id='map' class="map"> </div>
-      <p>Mapa de monitoreo de la calidad del aire</p>
-      
+      <div id='map' class="map pad2" >
+        <link rel="stylesheet" href="css/mapCerca.css">
+        <script src="js/mapCerca.js">
+        </script>
+    </div>
       <hr class="d-sm-none">
     </div>
     <div class="col-sm-3">
@@ -167,13 +169,7 @@
   </div>
 </div>
 
-<script>
-  mapboxgl.accessToken = 'pk.eyJ1Ijoicm9ycmlpenoiLCJhIjoiY2s2d2l3eXg0MDY3NDNtbnY5dHpneTV3byJ9.xYQogC26WN28iJlb4y4_mg';
-  var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11'
-  });
-</script>
+
 
 <script>
   var toggler = document.getElementsByClassName("caret");
